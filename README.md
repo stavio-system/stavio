@@ -1,21 +1,19 @@
+<h1 align="center">Stavio</h1>
+
 <p align="center">
-  <img src="./assets/ledgerloge.png" alt="Stavio" width="420" />
-  <br/>
-  <h1 align="center">Stavio</h1>
+  <strong>Decentralized peer-to-peer property rentals powered by the Stellar blockchain.</strong>
 </p>
 
 <p align="center">
-  A fork and evolution of <a href="https://github.com/Stellar-Rent/stellar-rent">StellarRent</a> — rebranded, restructured, and extended as Stavio.
+  Book and list properties. Pay instantly with USDC. Funds held in escrow — released only when rental conditions are met. No middlemen, no platform fees, no delays.
 </p>
 
-**Decentralized peer-to-peer property rentals powered by the Stellar blockchain.**
-
-Stavio lets property owners list rentals and tenants pay securely with USDC. Payments are held in a TrustlessWork escrow smart contract and released only when rental conditions are met — no middlemen, no 7–20% platform fees, no 1–7 day settlement delays.
-
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE)
-[![Next.js](https://img.shields.io/badge/Next.js-15.5-black?logo=next.js)](https://nextjs.org/)
-[![Stellar](https://img.shields.io/badge/Stellar-Testnet-blue?logo=stellar)](https://stellar.org/)
-[![Bun](https://img.shields.io/badge/runtime-Bun-orange?logo=bun)](https://bun.sh/)
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-blue.svg" alt="License" /></a>
+  <img src="https://img.shields.io/badge/Next.js-15.5-black?logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Stellar-Testnet-blue?logo=stellar" alt="Stellar" />
+  <img src="https://img.shields.io/badge/runtime-Bun-orange?logo=bun" alt="Bun" />
+</p>
 
 ---
 
@@ -28,27 +26,27 @@ Stavio lets property owners list rentals and tenants pay securely with USDC. Pay
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Environment Variables](#environment-variables)
+  - [Database Setup](#database-setup)
   - [Running Locally](#running-locally)
 - [Smart Contracts](#smart-contracts)
 - [API Reference](#api-reference)
 - [Contributing](#contributing)
-- [Lineage](#lineage)
 - [License](#license)
 
 ---
 
 ## Overview
 
-Traditional rental platforms impose high fees, slow payments, and opaque processes. Stavio solves this by:
+Traditional rental platforms charge 7–20% fees, hold funds for days, and operate as black boxes. Stavio removes all of that:
 
-- **Escrow-protected payments** — USDC held in a Soroban smart contract, released on confirmation
+- **Escrow-protected payments** — USDC locked in a Soroban smart contract, released only on confirmed completion
 - **Near-zero fees** — Stellar transactions cost ~$0.000001
 - **3-second settlement** — No waiting 3–7 business days
-- **Transparent ledger** — Every transaction is publicly verifiable on Stellar
+- **Fully transparent** — Every transaction is publicly verifiable on the Stellar ledger
 
 ### Current Status
 
-Stavio is under active development targeting Stellar Testnet. Core flows implemented:
+Stavio is actively developed on Stellar Testnet.
 
 | Feature | Status |
 |---|---|
@@ -90,8 +88,8 @@ Stavio is under active development targeting Stellar Testnet. Core flows impleme
 
 ### Core Payment Flow
 
-1. Tenant selects property and dates → BookingForm
-2. Backend creates booking record + initiates TrustlessWork escrow
+1. Tenant selects property and dates → `BookingForm`
+2. Backend creates booking record and initiates TrustlessWork escrow
 3. Tenant connects Freighter wallet → signs USDC transfer to escrow
 4. Backend confirms transaction hash on-chain
 5. Host confirms rental completion → escrow releases funds to host
@@ -109,7 +107,7 @@ Stavio is under active development targeting Stellar Testnet. Core flows impleme
 | Blockchain | Stellar, Soroban smart contracts (Rust) |
 | Payments | USDC on Stellar, TrustlessWork escrow API |
 | Wallet | Freighter browser extension |
-| Auth | Google OAuth (JWT decode) + Freighter wallet |
+| Auth | Google OAuth (JWT) + Freighter wallet |
 | Testing | Vitest (frontend), Bun test (backend), Playwright (e2e) |
 
 ---
@@ -119,33 +117,33 @@ Stavio is under active development targeting Stellar Testnet. Core flows impleme
 ```
 stavio/
 ├── apps/
-│   ├── web/                    # Next.js 15 frontend
+│   ├── web/                      # Next.js 15 frontend
 │   │   ├── src/
-│   │   │   ├── app/            # Next.js App Router pages
-│   │   │   ├── components/     # UI components
-│   │   │   ├── hooks/          # React hooks (auth, wallet, properties)
-│   │   │   ├── services/       # API client (api.ts)
-│   │   │   └── types/          # TypeScript types
-│   │   └── stellar-social-sdk/ # Vendored Stellar auth SDK
+│   │   │   ├── app/              # App Router pages
+│   │   │   ├── components/       # UI components
+│   │   │   ├── hooks/            # React hooks (auth, wallet, properties)
+│   │   │   ├── services/         # API client
+│   │   │   └── types/            # TypeScript types
+│   │   └── stellar-social-sdk/   # Vendored Stellar auth SDK
 │   │
-│   ├── backend/                # Express + Bun API server
+│   ├── backend/                  # Express + Bun API server
 │   │   ├── src/
-│   │   │   ├── controllers/    # Route handlers
-│   │   │   ├── services/       # Business logic
-│   │   │   ├── routes/         # Express routers
-│   │   │   ├── middleware/     # Auth, rate limiting, error handling
-│   │   │   └── config/         # Supabase, Redis setup
+│   │   │   ├── controllers/      # Route handlers
+│   │   │   ├── services/         # Business logic
+│   │   │   ├── routes/           # Express routers
+│   │   │   ├── middleware/       # Auth, rate limiting, error handling
+│   │   │   └── config/           # Supabase, Redis setup
 │   │   └── database/
-│   │       └── migrations/     # SQL migration files
+│   │       └── migrations/       # SQL migration files
 │   │
-│   └── stellar-contracts/      # Soroban smart contracts (Rust)
+│   └── stellar-contracts/        # Soroban smart contracts (Rust)
 │       └── contracts/
-│           ├── booking/        # Booking lifecycle contract
+│           ├── booking/          # Booking lifecycle contract
 │           ├── property-listing/ # Property registry contract
 │           └── review-contract/  # On-chain review system
 │
-├── package.json                # Monorepo root (npm workspaces)
-└── biome.json                  # Linting + formatting config
+├── package.json                  # Monorepo root (Yarn workspaces)
+└── biome.json                    # Linting + formatting config
 ```
 
 ---
@@ -155,7 +153,7 @@ stavio/
 ### Prerequisites
 
 - [Node.js](https://nodejs.org/) v18+
-- [Bun](https://bun.sh/) (backend runtime) — `npm install -g bun`
+- [Bun](https://bun.sh/) — `npm install -g bun`
 - [Supabase](https://supabase.com/) project (free tier works)
 - [Redis](https://redis.io/) instance (local or [Upstash](https://upstash.com/))
 - [Freighter](https://freighter.app/) browser extension (for wallet auth)
@@ -186,7 +184,7 @@ NEXT_PUBLIC_USDC_ISSUER_TESTNET=GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH
 
 ### Database Setup
 
-Run the migrations in order against your Supabase project (SQL Editor):
+Run migrations in order in your Supabase SQL Editor:
 
 ```
 apps/backend/database/migrations/00001_initial_schema.sql
@@ -214,7 +212,7 @@ npm install --legacy-peer-deps
 ```bash
 cd apps/backend
 bun run dev
-# Server starts on http://localhost:3001
+# Runs on http://localhost:3001
 ```
 
 **3. Start the frontend:**
@@ -222,12 +220,12 @@ bun run dev
 ```bash
 cd apps/web
 npm run dev
-# App starts on http://localhost:3000
+# Runs on http://localhost:3000
 ```
 
 **4. Open** [http://localhost:3000](http://localhost:3000)
 
-> The frontend will fall back to mock property data if the backend is not running, so the UI is always functional locally.
+> The frontend falls back to mock property data if the backend isn't running, so the UI works locally without a full setup.
 
 ---
 
@@ -237,18 +235,18 @@ Located in `apps/stellar-contracts/contracts/`. Written in Rust using the [Sorob
 
 | Contract | Description |
 |---|---|
-| `booking` | Manages booking lifecycle: create, cancel, update status, escrow ID linking |
-| `property-listing` | Property registry with paginated listing index and tamper-proof data hash |
-| `review-contract` | On-chain reviews: submit, get by user, reputation scoring (1–5 stars) |
+| `booking` | Booking lifecycle: create, cancel, update status, escrow ID linking |
+| `property-listing` | Property registry with paginated index and tamper-proof data hash |
+| `review-contract` | On-chain reviews: submit, retrieve by user, reputation scoring (1–5 stars) |
 
-### Build contracts
+**Build:**
 
 ```bash
 cd apps/stellar-contracts
 stellar contract build
 ```
 
-### Run contract tests
+**Test:**
 
 ```bash
 cd apps/stellar-contracts
@@ -285,46 +283,25 @@ Base URL: `http://localhost:3001`
 
 ## Contributing
 
-Contributions are welcome. Please open an issue before submitting a large PR.
+Open an issue before submitting a large PR. Small fixes can go straight to a PR.
 
 ```bash
 # Fork the repo, then:
-git clone https://github.com/your-username/stavio
+git clone https://github.com/stavio-system/stavio
 cd stavio
 npm install --legacy-peer-deps
 
 # Create a branch
 git checkout -b feat/your-feature
 
-# Make changes, then
+# Commit and push
 git commit -m "feat: your feature description"
 git push origin feat/your-feature
-# Open a pull request
+
+# Open a pull request on GitHub
 ```
 
 Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/).
-
----
-
-## Lineage
-
-Stavio is a fork of **[StellarRent](https://github.com/Stellar-Rent/stellar-rent)**, an open-source decentralized rental platform originally built by the StellarRent community on OnlyDust.
-
-Key changes from the original:
-
-- Rebranded from StellarRent → **Stavio**
-- Auth system rewritten — working Google OAuth + Freighter wallet (original had stub implementations)
-- `useProperties` wired to real backend API (original used mock data only)
-- `BookingForm` fetches real property data (original had hardcoded "Luxury Beachfront Villa")
-- `confirmBlockchainPayment` added to API client (original would crash at payment step)
-- `profiles.stellar_address` DB column added (missing from original migrations)
-- Reviews system added end-to-end (contract existed, no backend routes or frontend UI)
-- Analytics endpoints built out (original returned zeros — endpoints didn't exist)
-- `PropertyManagement` modals wired with controlled forms and submit handlers
-- `get_all_listings` Soroban contract fixed — now uses a stored ID index with pagination
-- Messages page rebuilt from placeholder to functional chat UI
-- Hero section, Navbar, PropertyCard, SearchBar redesigned with unified light blue theme
-- Right sidebar navigation replaced with standard top navbar
 
 ---
 
@@ -334,4 +311,6 @@ Apache 2.0 — see [LICENSE](./LICENSE).
 
 ---
 
-Built on [Stellar](https://stellar.org/) · Escrow by [TrustlessWork](https://trustlesswork.com/) · Originally forked from [StellarRent](https://github.com/Stellar-Rent/stellar-rent)
+<p align="center">
+  Built on <a href="https://stellar.org/">Stellar</a> · Escrow by <a href="https://trustlesswork.com/">TrustlessWork</a>
+</p>
