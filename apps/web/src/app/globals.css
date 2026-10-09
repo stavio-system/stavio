@@ -1,0 +1,84 @@
+@import "leaflet/dist/leaflet.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode - soft white base, light blue accents */
+    --background: 210 40% 98%;
+    --foreground: 216 49% 14%;
+
+    --muted: 210 40% 94%;
+    --muted-foreground: 216 25% 45%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 216 49% 14%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 216 49% 14%;
+
+    --border: 210 40% 88%;
+    --input: 210 40% 88%;
+
+    /* Light blue primary: #0EA5E9 sky-500 */
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 216 49% 14%;
+
+    --accent: 199 89% 93%;
+    --accent-foreground: 199 89% 30%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --ring: 199 89% 48%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode - deep navy base, light blue accents */
+    --background: 217 68% 10%;
+    --foreground: 199 60% 92%;
+
+    --muted: 217 68% 16%;
+    --muted-foreground: 199 40% 65%;
+
+    --popover: 217 68% 12%;
+    --popover-foreground: 199 60% 92%;
+
+    --card: 217 68% 13%;
+    --card-foreground: 199 60% 92%;
+
+    --border: 217 50% 22%;
+    --input: 217 50% 22%;
+
+    /* Light blue primary stays consistent across modes */
+    --primary: 199 89% 55%;
+    --primary-foreground: 217 68% 10%;
+
+    --secondary: 217 68% 18%;
+    --secondary-foreground: 199 60% 92%;
+
+    --accent: 217 68% 20%;
+    --accent-foreground: 199 89% 70%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --ring: 199 89% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

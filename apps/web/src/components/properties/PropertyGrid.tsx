@@ -1,0 +1,81 @@
+'use client';
+import type { FullPropertyProps } from 'public/mock-data';
+import { ErrorDisplay } from '../ui/error-display';
+import { LoadingGrid } from '../ui/loading-skeleton';
+import { PropertyCard } from './PropertyCard';
+
+interface PropertyGridProps {
+  properties?: FullPropertyProps[];
+  isLoading?: boolean;
+  error?: string | null;
+  onRetry?: () => void;
+  onLoadMore?: () => void;
+}
+
+const PropertyGrid = ({
+  properties = [],
+  isLoading = false,
+  error = null,
+  onRetry,
+  onLoadMore,
+}: PropertyGridProps) => {
+  // Show error state (from error-handling)
+  if (error) {
+    return (
+      <div className="py-12">
+        <ErrorDisplay
+          title="Failed to load properties"
+          message={error}
+          onRetry={onRetry}
+          variant="destructive"
+        />
+      </div>
+    );
+  }
+
+  // Show loading state for initial load (from error-handling)
+  if (isLoading && properties.length === 0) {
+    return <LoadingGrid count={8} columns={3} />;
+  }
+
+  // Show empty state (from error-handling)
+  if (!isLoading && properties.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-muted-foreground text-lg">No properties found</p>
+        <p className="text-muted-foreground/60 text-sm mt-2">Try adjusting your search filters</p>
+      </div>
+    );
+  }
+
+  // Show properties with main branch's grid improvements
+  return (
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 py-4">
+        {properties.map((property) => (
+          <PropertyCard key={property.id} property={property} />
+        ))}
+      </div>
+
+      {isLoading && properties.length > 0 && (
+        <div className="flex justify-center py-4">
+          <LoadingGrid count={3} columns={3} />
+        </div>
+      )}
+
+      {!isLoading && onLoadMore && properties.length > 0 && (
+        <div className="flex justify-center py-4">
+          <button
+            type="button"
+            onClick={onLoadMore}
+            className="px-6 py-2 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors font-medium text-sm"
+          >
+            Load More
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PropertyGrid;

@@ -1,0 +1,55 @@
+'use client';
+
+import { ThemeProvider, useTheme } from 'next-themes';
+import React from 'react';
+import { Spinner } from '~/components/ui/loading-skeleton';
+import { AuthProvider } from '~/hooks/auth/use-auth';
+import { StellarProvider } from '~/hooks/stellar/stellar-context';
+import { TrustlessWorkProvider } from '~/providers/TrustlessWorkProvider';
+
+/**
+ * Syncs resolved theme to theme-portal-root. Must live inside ThemeProvider.
+ */
+function ThemePortalSync() {
+  const { resolvedTheme } = useTheme();
+  React.useEffect(() => {
+    const portal =
+      typeof window !== 'undefined' ? document.getElementById('theme-portal-root') : null;
+    if (portal && resolvedTheme) portal.className = resolvedTheme;
+  }, [resolvedTheme]);
+  return null;
+}
+
+interface ProvidersProps {
+  children: React.ReactNode;
+}
+
+export function Providers({ children }: ProvidersProps) {
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => setMounted(true), []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <Spinner size="lg" label="Initializing..." />
+      </div>
+    );
+  }
+
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange={false}
+      storageKey="stavio-theme"
+    >
+      <ThemePortalSync />
+      <StellarProvider>
+        <TrustlessWorkProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TrustlessWorkProvider>
+      </StellarProvider>
+    </ThemeProvider>
+  );
+}
